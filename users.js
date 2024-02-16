@@ -11,20 +11,16 @@ const addUser = async (data) => {
 };
 
 const getUsersInRoom = async (rooID) => {
-    const users = await User.find();
-    // console.log('all room users:, ', users);
+    let users = await User.find({ room: rooID });
     return users;
 };
 
 const removeUser = async (socketID) => {
     try {
         const user = await User.findOne({ id: socketID });
+        // removing the user
         await User.findOneAndDelete(user);
-        if (user) {
-            return user;
-        }
-
-        return false;
+        return user;
     } catch (err) {
         return false;
     }
