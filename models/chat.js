@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
-const chatSchema = mongoose.Schema({
+const chatSchema = new mongoose.Schema({
     room: { type: String, require: true },
     content: [
         {
-            text: { type: String },
+            chat: { type: String },
             user: { type: String },
-            time: new Date(),
+            time: { type: Date, default: Date.now },
         },
     ],
 });

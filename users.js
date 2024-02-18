@@ -1,3 +1,4 @@
+import Chat from './models/chat.js';
 import User from './models/user.js';
 
 const addUser = async (data) => {
@@ -12,7 +13,7 @@ const addUser = async (data) => {
 
 const getUsersInRoom = async (rooID) => {
     let users = await User.find({ room: rooID });
-    return users;
+    return users || [];
 };
 
 const removeUser = async (socketID) => {
@@ -26,4 +27,22 @@ const removeUser = async (socketID) => {
     }
 };
 
-export { addUser, removeUser, getUsersInRoom };
+const getAllChatsFromRoom = async (roomID) => {
+    const data = await Chat.findOne({ room: roomID });
+    return data;
+};
+
+const addChatDataToRoom = async (roomID, data) => {
+    const chatRoom = await Chat.findOne({ room: roomID });
+
+    if (chatRoom) {
+        chatRoom.content.push(data);
+        await chatRoom.save();
+    } else {
+        const chat = new Chat({ room: roomID, content: [data] });
+        await chat.save();
+        console.log('chats creating...');
+    }
+};
+
+export { addUser, removeUser, getUsersInRoom, getAllChatsFromRoom, addChatDataToRoom };
